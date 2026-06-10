@@ -12,3 +12,6 @@ python-dotenv
 typesense
 langchain_openai
 langgraph
+fastapi
+uvicorn[standard]
+python-multipart
