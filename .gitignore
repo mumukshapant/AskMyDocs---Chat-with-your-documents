@@ -1,0 +1,5 @@
+mp_personal_env/
+.env
+.idea/
+__pycache__/
+.ipynb_checkpoints/
