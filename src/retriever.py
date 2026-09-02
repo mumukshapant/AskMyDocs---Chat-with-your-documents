@@ -124,3 +124,40 @@ class RAGRetriever:
         except Exception as e:
             print(f"Error during retrieval: {e}")
             return []
+
+    def retrieve_per_file(self, query: str, top_k_per_file: int = 5, score_threshold: float = 0.0) -> List[Dict[str, Any]]:
+        """
+        Retrieve top-matching chunks separately from each indexed file, then combine.
+        Ensures every uploaded document is represented, regardless of its length
+        relative to the others (plain top-k search favors longer documents).
+        """
+        all_docs = self.vector_store.collection.get()
+        source_files = sorted(set(m.get("source_file") for m in all_docs["metadatas"]))
+
+        combined = []
+        for source_file in source_files:
+            query_embedding = self.embedding_manager.generate_embeddings([query])[0]
+            results = self.vector_store.collection.query(
+                query_embeddings=[query_embedding.tolist()],
+                n_results=top_k_per_file,
+                where={"source_file": source_file}
+            )
+
+            if results["documents"] and results["documents"][0]:
+                documents = results["documents"][0]
+                metadatas = results["metadatas"][0]
+                distances = results["distances"][0]
+                ids = results["ids"][0]
+
+                for doc_id, document, metadata, distance in zip(ids, documents, metadatas, distances):
+                    similarity_score = 1 - distance
+                    if similarity_score >= score_threshold:
+                        combined.append({
+                            "id": doc_id,
+                            "content": document,
+                            "metadata": metadata,
+                            "similarity_score": similarity_score,
+                            "distance": distance,
+                        })
+
+        return combined

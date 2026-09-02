@@ -14,14 +14,22 @@ class AdvancedRAGPipeline:
         question: str,
         top_k: int = 5,
         min_score: float = 0.2,
-        summarize: bool = False
+        summarize: bool = False,
+        per_file: bool = False
     ) -> Dict[str, Any]:
 
-        results = self.retriever.retrieve(
-            question,
-            top_k=top_k,
-            score_threshold=min_score
-        )
+        if per_file:
+            results = self.retriever.retrieve_per_file(
+                question,
+                top_k_per_file=top_k,
+                score_threshold=min_score
+            )
+        else:
+            results = self.retriever.retrieve(
+                question,
+                top_k=top_k,
+                score_threshold=min_score
+            )
 
         if not results:
             answer = "No relevant context found."

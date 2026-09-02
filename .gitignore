@@ -4,3 +4,4 @@ mp_personal_env/
 __pycache__/
 .ipynb_checkpoints/
 data/vector_store/
+NOTES.md

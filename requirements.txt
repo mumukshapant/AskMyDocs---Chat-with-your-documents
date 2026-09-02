@@ -1,4 +1,5 @@
 jupyter
+streamlit
 langchain
 langchain-core
 langchain-community

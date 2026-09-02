@@ -43,7 +43,7 @@ class GroqLLM:
         # Create prompt template
         prompt_template = PromptTemplate(
             input_variables=["context", "question"],
-            template="""You are a helpful AI assistant. Use the following context as your primary source, and supplement with your own knowledge where the context is incomplete.
+            template="""You are a helpful AI assistant. Answer the question using ONLY the context below — do not use outside knowledge. If the context does not contain enough information to answer, say so explicitly instead of guessing. Keep the answer concise (a few sentences, unless the question needs more detail).
             Context:
             {context}
 
