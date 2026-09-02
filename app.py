@@ -3,6 +3,8 @@
 import warnings
 warnings.filterwarnings("ignore")
 
+from pathlib import Path
+
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -24,6 +26,15 @@ st.title("AskMyDocs")
 
 pipeline = load_pipeline()
 
+# Widget to let the user upload a PDF from their browser
+uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+
+if uploaded_file:
+    # Save the uploaded file to data/pdf/ on local disk, same place process_all_pdfs() reads from
+    dest = Path("data/pdf") / uploaded_file.name
+    dest.write_bytes(uploaded_file.getbuffer())
+    st.success(f"Saved to {dest}")
+
 question = st.text_input("Ask a question about your documents:")
 
 if st.button("Submit") and question:
@@ -41,7 +52,3 @@ if st.button("Submit") and question:
             st.markdown(f"**{src['source']}** (page {src['page']}, score {src['score']})")
             st.caption(src["preview"])
 
-    with st.expander("History"):
-        for turn in reversed(result["history"]):
-            st.markdown(f"**Q:** {turn['question']}")
-            st.write(turn["answer"])

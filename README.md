@@ -8,11 +8,11 @@ Load PDFs → chunk → embed → store (one-time ingestion) → retrieve → ge
 
 ## UI/UX
 
-A [Streamlit](https://streamlit.io/) app ([`app.py`](app.py)) provides a simple interface: a text input for the question, a Submit button, and the answer displayed below it, with collapsible sections for the summary, sources, and question history.
+Implemented using [Streamlit](https://streamlit.io/) app ([`app.py`](app.py))
 
 ## Prompt
 
-The LLM ([`src/llm.py`](src/llm.py)) is instructed to answer **only** from the retrieved context — not from its own general knowledge — and to say explicitly when the context doesn't contain enough information, rather than guessing. Exact template used:
+The LLM ([`src/llm.py`](src/llm.py)) is instructed to answer **only** from the retrieved context — not from its own general knowledge. Exact template used:
 
 ```
 You are a helpful AI assistant. Answer the question using ONLY the context below — do not use outside knowledge. If the context does not contain enough information to answer, say so explicitly instead of guessing. Keep the answer concise (a few sentences, unless the question needs more detail).
@@ -41,7 +41,8 @@ Answer:
 
 ## Input
 
-- **Documents:** drop PDF files into `data/pdf/`. All PDFs in that folder (recursively) are loaded and indexed.
+- **Documents:** drop PDF files into `data/pdf/`, or upload them through the app. All PDFs in that folder (recursively) are loaded and indexed.
+
 - **Question:** entered directly in the app's text input at runtime.
 
 ## Output
@@ -57,3 +58,9 @@ streamlit run app.py
 ```
 
 This starts the app locally, deployed at **http://localhost:8501**. Open that URL in a browser, type a question, and hit Submit.
+
+**Note**
+ **Caveat:** 
+ - Right now, uploaded PDFs are saved directly onto your computer's actual disk (`data/pdf/`). This works fine while running locally. 
+ - But if this app is ever hosted online (e.g. on Heroku or a similar platform), this will need to be revisited — most hosting platforms don't keep local files around permanently, so uploaded PDFs could get lost. 
+ - We'll need a different storage solution before a real deployment.
