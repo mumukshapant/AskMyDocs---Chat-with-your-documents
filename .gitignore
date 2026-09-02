@@ -3,3 +3,4 @@ mp_personal_env/
 .idea/
 __pycache__/
 .ipynb_checkpoints/
+data/vector_store/
