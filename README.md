@@ -10,6 +10,16 @@ Load PDFs → chunk → embed → store (one-time ingestion) → retrieve → ge
 
 Implemented using [Streamlit](https://streamlit.io/) app ([`app.py`](app.py))
 
+## Screenshots
+
+**Summarizing multiple uploaded documents at once:**
+
+![Summarize all three documents](screenshots/summarize-all-three.png)
+
+**Cross-document question — correctly identifying the one relevant document out of several:**
+
+![Cross-document question](screenshots/cross-document-question.png)
+
 ## Prompt
 
 The LLM ([`src/llm.py`](src/llm.py)) is instructed to answer **only** from the retrieved context — not from its own general knowledge. Exact template used:
